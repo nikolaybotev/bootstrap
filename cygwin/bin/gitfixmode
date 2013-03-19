@@ -1,0 +1,4 @@
+#!/bin/sh
+git status \
+    | awk '$2 == "modified:" {print $3}' \
+    | xargs -l -I{} bash -c "[[ -f {} ]] && echo chmod -x {} && chmod -x {}"
