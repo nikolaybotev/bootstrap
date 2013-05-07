@@ -24,6 +24,10 @@ unset TMP
 unset TEMP
 
 
+# If not running interactively, don't do anything
+[[ "$-" != *i* ]] && return
+
+
 # Shell Options
 # #############
 
@@ -39,6 +43,10 @@ shopt -s histappend
 case $- in
   *i*) [[ -f /etc/bash_completion ]] && . /etc/bash_completion ;;
 esac
+
+[ -d "$ANT_HOME" ] && complete -C $ANT_HOME/bin/complete-ant-cmd.pl ant
+[ -f ~/bin/git-completion.bash ] || (mkdir -p ~/bin && /usr/bin/curl -s https://raw.github.com/git/git/master/contrib/completion/git-completion.bash > ~/bin/git-completion.bash)
+. ~/bin/git-completion.bash
 
 
 # History Options
