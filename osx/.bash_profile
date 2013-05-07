@@ -42,5 +42,3 @@ alias l='ls -CFhl'                              #
 
 alias s='ssh -X'
 
-alias mklink='cmd.exe /c mklink'
-
