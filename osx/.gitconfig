@@ -1,6 +1,8 @@
 [user]
 	name = Nikolay Botev
 	email = bono8106@yahoo.com
+[core]
+	excludesfile = ~/.gitignore
 [push]
 	default = upstream
 [color]
