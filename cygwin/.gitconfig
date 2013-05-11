@@ -1,13 +1,17 @@
 [user]
-	name = Nikolay Botev
-	email = bono8106@yahoo.com
+    name = Nikolay Botev
+    email = bono8106@yahoo.com
+[core]
+    excludesfile = ~/.gitignore
 [push]
-	default = upstream
-[merge]
-	tool = kdiff3
-[mergetool "kdiff3"]
-	path = c:/Program Files (x86)/KDiff3/kdiff3.exe
-[diff]
-	guitool = kdiff3
+    default = upstream
+[color]
+    ui = true
 [difftool "kdiff3"]
-	path = c:/Program Files (x86)/KDiff3/kdiff3.exe
+    path = c:/Program Files (x86)/KDiff3/kdiff3.exe
+[diff]
+    guitool = kdiff3
+[mergetool "kdiff3"]
+    path = c:/Program Files (x86)/KDiff3/kdiff3.exe
+[merge]
+    tool = kdiff3

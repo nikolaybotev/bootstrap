@@ -1,12 +1,12 @@
 [user]
-	name = Nikolay Botev
-	email = bono8106@yahoo.com
+    name = Nikolay Botev
+    email = bono8106@yahoo.com
 [core]
-	excludesfile = ~/.gitignore
+    excludesfile = ~/.gitignore
 [push]
-	default = upstream
+    default = upstream
 [color]
-	ui = true
+    ui = true
 [difftool "kdiff3"]
     path = /Applications/kdiff3.app/Contents/MacOS/kdiff3
     trustExitCode = false
