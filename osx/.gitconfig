@@ -21,3 +21,5 @@
     keepBackup = false
 [merge]
     tool = kdiff3
+[log]
+    decorate = true

@@ -15,3 +15,5 @@
     path = c:/Program Files (x86)/KDiff3/kdiff3.exe
 [merge]
     tool = kdiff3
+[log]
+    decorate = true
