@@ -1,4 +1,4 @@
-. ~/.profile
+[ -r ~/.profile ] && . ~/.profile
 
 export JAVA_HOME=~/Library/Java/jdk6/Contents/Home
 export PATH=${JAVA_HOME}/bin:$PATH
