@@ -30,7 +30,7 @@ export HISTCONTROL="ignoredups"
 # #######
 
 # Some shortcuts for different directory listings
-alias ls='ls -hF'                 # classify files in colour
+alias ls='ls -hFG'                # classify files in colour
 alias ll='ls -l'                  # long list
 alias la='ls -A'                  # all but . and ..
 alias l='ls -CFhl'                #
