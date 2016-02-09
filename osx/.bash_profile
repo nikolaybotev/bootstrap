@@ -1,9 +1,4 @@
-[ -r ~/.profile ] && . ~/.profile
-
-export JAVA_HOME=~/Library/Java/jdk6/Contents/Home
-export PATH=${JAVA_HOME}/bin:$PATH
-
-export ANT_HOME=/usr/share/ant
+#!/bin/bash
 
 # If not running interactively, don't do anything
 [[ "$-" != *i* ]] && return
@@ -19,9 +14,9 @@ shopt -s histappend
 # Completion options
 # ##################
 
-[ -d "$ANT_HOME" ] && complete -C $ANT_HOME/bin/complete-ant-cmd.pl ant
-[ -f ~/bin/git-completion.bash ] || (mkdir -p ~/bin && /usr/bin/curl -s https://raw.github.com/git/git/master/contrib/completion/git-completion.bash > ~/bin/git-completion.bash)
-. ~/bin/git-completion.bash
+if [ -x /usr/local/bin/brew ] && [ -f $(/usr/local/bin/brew --prefix)/etc/bash_completion ]; then
+    . $(/usr/local/bin/brew --prefix)/etc/bash_completion
+fi
 
 
 # History Options
@@ -36,9 +31,9 @@ export HISTCONTROL="ignoredups"
 
 # Some shortcuts for different directory listings
 alias ls='ls -hF'                 # classify files in colour
-alias ll='ls -l'                              # long list
-alias la='ls -A'                              # all but . and ..
-alias l='ls -CFhl'                              #
+alias ll='ls -l'                  # long list
+alias la='ls -A'                  # all but . and ..
+alias l='ls -CFhl'                #
 
 alias s='ssh -X'
 
