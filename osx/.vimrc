@@ -7,3 +7,5 @@ set incsearch
 set smarttab
 set autoindent
 set complete-=i
+set number
+set expandtab
