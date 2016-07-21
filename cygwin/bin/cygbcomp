@@ -1,7 +1,0 @@
-#!/bin/bash --norc
-
-# A simple wrapper for Beyond Compare that translates cygwin paths to windows
-
-"/cygdrive/c/Program Files (x86)/Beyond Compare 3/BComp.exe" "$(cygpath -d "$1")" "$(cygpath -d "$2")" "$(cygpath -d "$3")" "$(cygpath -d "$4")"
-
-
