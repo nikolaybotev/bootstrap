@@ -19,6 +19,15 @@ if [ -x /usr/local/bin/brew ] && [ -f $(/usr/local/bin/brew --prefix)/etc/bash_c
 fi
 
 
+# Git
+# ###
+
+if [ "$(type -t __git_ps1)" = "function" ]; then
+  GIT_PS1_SHOWDIRTYSTATE=true
+  export PS1=$'\\[\e[93m\\]\xe2\x9a\xa1\\[\e[0m\\] \w\\[\e[32m\\]$(__git_ps1)\\[\e[0m\\]\$ '
+fi
+
+
 # History Options
 # ###############
 
