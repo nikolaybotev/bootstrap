@@ -1,7 +1,6 @@
 [user]
     name = Nikolay Botev
-    email = bono8106@yahoo.com
-
+    email = nikolaybotevb@yahoo.com
 [core]
     excludesfile = ~/.gitignore
 [push]
