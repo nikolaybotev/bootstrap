@@ -3,6 +3,8 @@
     email = nikolaybotevb@yahoo.com
 [core]
     excludesfile = ~/.gitignore
+[fetch]
+    prune = true
 [push]
     default = current
 [color]
