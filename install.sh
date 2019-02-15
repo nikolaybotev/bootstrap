@@ -1,5 +1,6 @@
 #!/bin/sh
 
+
 # Preconditions
 if [ "$(uname)" != 'Darwin' ]; then echo "This script only runs on macOS."; exit 1; fi
 if [ -d ~/.bootstrap ]; then echo "~/.bootstrap directory already exists."; exit 1; fi
@@ -29,6 +30,7 @@ sh -c "$(curl -fsSL https://raw.github.com/robbyrussell/oh-my-zsh/master/tools/i
 sed -i "" -e "s/^# CASE_SENSITIVE=/CASE_SENSITIVE=/" ~/.zshrc
 sed -i "" -e "s/^# DISABLE_UNTRACKED_FILES_DIRTY=/DISABLE_UNTRACKED_FILES_DIRTY=/" ~/.zshrc
 echo "\nsource ~/.aliases" >> ~/.zshrc
+
 
 # git graphical diff tools
 open https://sourceforge.net/projects/kdiff3/files/
