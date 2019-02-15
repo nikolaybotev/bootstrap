@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/sh -e
 
 
 # Preconditions
@@ -43,4 +43,9 @@ open https://www.macports.org/install.php
 open https://brew.sh
 open http://www.jenv.be
 oepn https://github.com/creationix/nvm#installation
+
+
+# cloud tools: gcloud, aws
+open https://cloud.google.com/sdk/docs/quickstart-macos
+open https://aws.amazon.com/cli/
 
