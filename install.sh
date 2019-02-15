@@ -15,7 +15,7 @@ user_fullname="$(dscacheutil -q user -a name "$(whoami)" |awk '$1 == "gecos:" { 
 user_email="$(dscl . readpl "$HOME" dsAttrTypeNative:LinkedIdentity appleid.apple.com:linked\ identities:0:full\ name | awk '{print $4}')"
 echo "Git Name: $user_fullname"
 echo "Git E-mail: $user_email"
-print -n "Press return to continue . . ." && read
+echo "Press return to continue . . ." && read
 sed -e "s/_name_/${user_fullname}/g; s/_email_/${user_email}/g" ~/.bootstrap/.gitconfig > ~/.gitconfig
 cp ~/.bootstrap/.gitignore ~
 
@@ -42,7 +42,7 @@ open https://www.scootersoftware.com/download.php
 open https://www.macports.org/install.php
 open https://brew.sh
 open http://www.jenv.be
-oepn https://github.com/creationix/nvm#installation
+open https://github.com/creationix/nvm#installation
 
 
 # cloud tools: gcloud, aws
