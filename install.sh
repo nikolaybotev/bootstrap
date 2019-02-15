@@ -7,10 +7,12 @@ if [ -d ~/.bootstrap ]; then echo "~/.bootstrap directory already exists."; exit
 
 
 # get repo
+echo "Getting code ..."
 git clone https://github.com/nikolaybotevb/bootstrap.git ~/.bootstrap
 
 
 # git config
+echo "Configuring git ..."
 user_fullname="$(dscacheutil -q user -a name "$(whoami)" |awk '$1 == "gecos:" { print $2 " " $3 }')"
 user_email="$(dscl . readpl "$HOME" dsAttrTypeNative:LinkedIdentity appleid.apple.com:linked\ identities:0:full\ name | awk '{print $4}')"
 echo "Git Name: $user_fullname"
@@ -21,10 +23,12 @@ cp ~/.bootstrap/.gitignore ~
 
 
 # .vimrc
+echo "Configuring vim ..."
 cp ~/.bootstrap/.vimrc ~
 
 
 # zsh (https://ohmyz.sh)
+echo "Installing zsh ..."
 cp ~/.bootstrap/.aliases ~
 sh -c "$(curl -fsSL https://raw.github.com/robbyrussell/oh-my-zsh/master/tools/install.sh)"
 sed -i "" -e "s/^# CASE_SENSITIVE=/CASE_SENSITIVE=/" ~/.zshrc
