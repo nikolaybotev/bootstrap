@@ -8,3 +8,5 @@ alias s='ssh -X'
 alias g='git'
 alias gw='./gradlew'
 
+export PATH="$PATH:$HOME/.bootstrap/bin"
+

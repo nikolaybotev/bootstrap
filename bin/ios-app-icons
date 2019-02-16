@@ -1,0 +1,43 @@
+#!/bin/sh
+#
+# Prerequisites:
+#   brew install python3 cairo
+#   pip3 install cairosvg
+#
+# Usage:
+#   $0 <file-name.svg>
+#
+
+file="$1"
+base="${1%.*}"
+
+if [ "$file" == "" ]; then
+  echo "Usage: $0 svg-file-name"
+  exit 2
+fi
+
+function export_pngs {
+  local size="$1"
+  shift
+
+  for m in "$@"; do
+    dim="$(printf "%.0f" $(echo "$size * $m" | bc))"
+    cairosvg "$file" --output-width $dim --output-height $dim -o "${base}-${size}x${size}@${m}.png"
+  done
+}
+
+export_pngs 1024 1
+
+export_pngs 83.5 2
+export_pngs 76 1 2
+
+export_pngs 40 1 2
+export_pngs 29 1 2
+export_pngs 20 1 2
+
+export_pngs 60 2 3
+
+export_pngs 40 2 3
+export_pngs 29 2 3
+export_pngs 20 2 3
+
