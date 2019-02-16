@@ -11,6 +11,15 @@ echo "Getting code ..."
 git clone https://github.com/nikolaybotevb/bootstrap.git ~/.bootstrap
 
 
+# Terminal config
+#defaults write com.apple.Terminal "Default Window Settings" Novel
+#defaults write com.apple.Terminal "Startup Window Settings" Novel
+plutil -replace "Default Window Settings" -string Novel ~/Library/Preferences/com.apple.Terminal.plist
+plutil -replace "Startup Window Settings" -string Novel ~/Library/Preferences/com.apple.Terminal.plist
+plutil -replace "Window Settings.Novel.shellExitAction" -integer 1 ~/Library/Preferences/com.apple.Terminal.plist
+plutil -replace "Window Settings.Novel.useOptionAsMetaKey" -bool true ~/Library/Preferences/com.apple.Terminal.plist   
+
+
 # git config
 echo "Configuring git ..."
 user_fullname="$(dscacheutil -q user -a name "$(whoami)" |awk '$1 == "gecos:" { print $2 " " $3 }')"
