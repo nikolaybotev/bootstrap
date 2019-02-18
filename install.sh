@@ -17,7 +17,27 @@ git clone https://github.com/nikolaybotevb/bootstrap.git ~/.bootstrap
 plutil -replace "Default Window Settings" -string Novel ~/Library/Preferences/com.apple.Terminal.plist
 plutil -replace "Startup Window Settings" -string Novel ~/Library/Preferences/com.apple.Terminal.plist
 plutil -replace "Window Settings.Novel.shellExitAction" -integer 1 ~/Library/Preferences/com.apple.Terminal.plist
-plutil -replace "Window Settings.Novel.useOptionAsMetaKey" -bool true ~/Library/Preferences/com.apple.Terminal.plist   
+plutil -replace "Window Settings.Novel.useOptionAsMetaKey" -bool true ~/Library/Preferences/com.apple.Terminal.plist
+
+
+# Dock etc system preferences
+# https://github.com/zenangst/OSX-Configuration/blob/master/osx_bootstrap.sh
+#
+# dock auto-hide
+defaults write com.apple.dock autohide -bool true
+# tap to cliek
+defaults write com.apple.driver.AppleBluetoothMultitouch.trackpad Clicking -bool true
+defaults -currentHost write -g com.apple.mouse.tapBehavior -int 1
+defaults write com.apple.AppleMultitouchTrackpad Clicking -bool true
+# app expose
+defaults write com.apple.dock showAppExposeGestureEnabled -int 1
+# keyboard repeat
+defaults write NSGlobalDomain KeyRepeat -int 2
+defaults write NSGlobalDomain InitialKeyRepeat -int 15
+# cursor size (cannot change here, do manually)
+#defaults write com.apple.universalaccess mouseDriverCursorSize -float 1.5
+# finder
+defaults write com.apple.finder ShowPathbar -bool true
 
 
 # git config
