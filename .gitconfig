@@ -9,7 +9,10 @@
     default = current
 [color]
     ui = true
+[format]
+    pretty = fuller
 [log]
+    date = local
     decorate = true
 
 [alias]
