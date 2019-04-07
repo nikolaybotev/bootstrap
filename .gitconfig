@@ -14,6 +14,7 @@
 [log]
     date = local
     decorate = true
+    follow = true
 
 [alias]
     co = checkout
