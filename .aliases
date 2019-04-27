@@ -8,6 +8,15 @@ alias s='ssh -X'
 alias g='git'
 alias gw='./gradlew'
 
+function gpo {
+  git push 2>&1 | awk '{ print } $1 == "remote:" && $2 ~ /^https:/ { system("open " $2) }'
+}
+
+function gpc {
+  git checkout master
+  git pull 2>&1 | awk '{ print } $2 == "[deleted]" { sub(/origin\//, "", $5); system("git branch -D " $5) }'
+}
+
 export PATH="$PATH:$HOME/.bootstrap/bin"
 
 # Sudoless Cocoapods.
