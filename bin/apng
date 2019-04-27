@@ -1,0 +1,16 @@
+#!/usr/local/bin/python3
+#
+# Dependencies
+#
+#   pip3 install apng Pillow
+#
+
+from apng import APNG
+import sys
+
+inputs = sys.argv[1:]
+delay = 41 # 24 fps
+output = "result.png"
+
+APNG.from_files(inputs, delay=delay).save(output)
+
