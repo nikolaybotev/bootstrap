@@ -17,6 +17,24 @@ function gpc {
   git pull 2>&1 | awk '{ print } $2 == "[deleted]" { sub(/origin\//, "", $5); system("git branch -D " $5) }'
 }
 
+function gitlinesx {
+  local ex="$1"
+  shift
+  git log --pretty=format:"%h,%an,%cd,%f" --date=iso-strict --numstat "$@" | grep -Ev "$ex" | awk '
+    /^$/ { print ll "," ac "," rc; ll=""; next }
+    ll == "" { ll = $0; ac = 0; rc = 0; next }
+    ll != "" { ac = ac + $1; rc = rc + $2; }
+    END { print ll "," ac "," rc }'
+}
+
+function gitlines {
+  git log --pretty=format:"%h,%an,%cd,%f" --date=iso-strict --numstat "$@" | awk '
+    /^$/ { print ll "," ac "," rc; ll=""; next }
+    ll == "" { ll = $0; ac = 0; rc = 0; next }
+    ll != "" { ac = ac + $1; rc = rc + $2; }
+    END { print ll "," ac "," rc }'
+}
+
 export PATH="$PATH:$HOME/.bootstrap/bin"
 
 # Sudoless Cocoapods.
