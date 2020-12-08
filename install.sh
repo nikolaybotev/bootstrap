@@ -57,9 +57,11 @@ cp ~/.bootstrap/.vimrc ~
 
 
 # zsh (https://ohmyz.sh)
-echo "Installing zsh ..."
+echo "Installing oh-my-zsh ..."
 cp ~/.bootstrap/.aliases ~
-sh -c "$(curl -fsSL https://raw.github.com/robbyrussell/oh-my-zsh/master/tools/install.sh)"
+if [ -z "$ZSH" ]; then
+  sh -c "$(curl -fsSL https://raw.github.com/robbyrussell/oh-my-zsh/master/tools/install.sh)"
+fi
 sed -i "" -e "s/^# CASE_SENSITIVE=/CASE_SENSITIVE=/" ~/.zshrc
 sed -i "" -e "s/^# DISABLE_UNTRACKED_FILES_DIRTY=/DISABLE_UNTRACKED_FILES_DIRTY=/" ~/.zshrc
 echo "\nsource ~/.aliases" >> ~/.zshrc
