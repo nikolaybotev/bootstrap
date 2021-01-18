@@ -16,6 +16,10 @@ setopt pushdminus
 setopt sharehistory
 
 
+# Autocomplete
+autoload -U compinit && compinit
+
+
 # Prompt
 fpath+=$HOME/.zsh/pure
 autoload -U promptinit; promptinit
