@@ -63,8 +63,7 @@ git clone https://github.com/sindresorhus/pure.git "$HOME/.zsh/pure"
 
 # Configure zsh
 echo "Configuring zsh ..."
-cp ~/.bootstrap/.aliases ~
-echo "\nsource ~/.aliases" >> ~/.zshrc
+cp ~/.bootstrap/.zshrc ~
 
 
 # Open Websites for Tools to install manually
