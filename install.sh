@@ -1,17 +1,16 @@
 #!/bin/sh -e
 
-
-# Preconditions
+# Check Preconditions
 if [ "$(uname)" != 'Darwin' ]; then echo "This script only runs on macOS."; exit 1; fi
 if [ -d ~/.bootstrap ]; then echo "~/.bootstrap directory already exists."; exit 1; fi
 
 
-# get repo
+# Clone Repository
 echo "Getting code ..."
 git clone https://github.com/nikolaybotevb/bootstrap.git ~/.bootstrap
 
 
-# Terminal config
+# Configure Terminal App
 #defaults write com.apple.Terminal "Default Window Settings" Novel
 #defaults write com.apple.Terminal "Startup Window Settings" Novel
 plutil -replace "Default Window Settings" -string Novel ~/Library/Preferences/com.apple.Terminal.plist
@@ -20,6 +19,7 @@ plutil -replace "Window Settings.Novel.shellExitAction" -integer 1 ~/Library/Pre
 plutil -replace "Window Settings.Novel.useOptionAsMetaKey" -bool true ~/Library/Preferences/com.apple.Terminal.plist
 
 
+# Configure macOS UI Preferences
 # Dock etc system preferences
 # https://github.com/zenangst/OSX-Configuration/blob/master/osx_bootstrap.sh
 #
@@ -40,7 +40,7 @@ defaults write NSGlobalDomain InitialKeyRepeat -int 15
 defaults write com.apple.finder ShowPathbar -bool true
 
 
-# git config
+# Write .gitconfig and .gitignore
 echo "Configuring git ..."
 user_fullname="$(dscacheutil -q user -a name "$(whoami)" |awk '$1 == "gecos:" { print $2 " " $3 }')"
 user_email="$(dscl . readpl "$HOME" dsAttrTypeNative:LinkedIdentity appleid.apple.com:linked\ identities:0:full\ name | awk '{print $4}')"
@@ -51,36 +51,28 @@ sed -e "s/_name_/${user_fullname}/g; s/_email_/${user_email}/g" ~/.bootstrap/.gi
 cp ~/.bootstrap/.gitignore ~
 
 
-# .vimrc
+# Write .vimrc
 echo "Configuring vim ..."
 cp ~/.bootstrap/.vimrc ~
 
 
-# zsh (https://ohmyz.sh)
-echo "Installing oh-my-zsh ..."
+# Install Pure Prompt
+mkdir -p "$HOME/.zsh"
+git clone https://github.com/sindresorhus/pure.git "$HOME/.zsh/pure"
+
+
+# Configure zsh
+echo "Configuring zsh ..."
 cp ~/.bootstrap/.aliases ~
-if [ -z "$ZSH" ]; then
-  sh -c "$(curl -fsSL https://raw.github.com/robbyrussell/oh-my-zsh/master/tools/install.sh)"
-fi
-sed -i "" -e "s/^# CASE_SENSITIVE=/CASE_SENSITIVE=/" ~/.zshrc
-sed -i "" -e "s/^# DISABLE_UNTRACKED_FILES_DIRTY=/DISABLE_UNTRACKED_FILES_DIRTY=/" ~/.zshrc
 echo "\nsource ~/.aliases" >> ~/.zshrc
 
 
-# git graphical diff tools
-open https://sourceforge.net/projects/kdiff3/files/
+# Open Websites for Tools to install manually
+# - git graphical diff tools
 open https://www.perforce.com/downloads/visual-merge-tool
 open https://www.scootersoftware.com/download.php
-
-
-# other standard tools to install manually: macports, homebrew, jenv, nvm
-open https://www.macports.org/install.php
+# - standard tools: homebrew, jenv, fnm
 open https://brew.sh
 open http://www.jenv.be
-open https://github.com/creationix/nvm#installation
-
-
-# cloud tools: gcloud, aws
-open https://cloud.google.com/sdk/docs/quickstart-macos
-open https://aws.amazon.com/cli/
+open https://github.com/Schniz/fnm#installation
 

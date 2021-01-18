@@ -1,8 +1,33 @@
-# Some shortcuts for different directory listings
-#alias ls='ls -hFG'                # classify files in colour
-#alias ll='ls -l'                  # long list
-#alias la='ls -A'                  # all but . and ..
-#alias l='ls -CFhl'                #
+# Options
+
+setopt alwaystoend
+setopt autopushd
+setopt completeinword
+setopt extendedhistory
+setopt histexpiredupsfirst
+setopt histignoredups
+setopt histignorespace
+setopt histverify
+setopt interactivecomments
+setopt longlistjobs
+setopt promptsubst
+setopt pushdignoredups
+setopt pushdminus
+setopt sharehistory
+
+
+# Prompt
+fpath+=$HOME/.zsh/pure
+autoload -U promptinit; promptinit
+prompt pure
+
+
+# Aliases and Functions
+
+alias ls='ls -hFG'
+alias ll='ls -l'
+alias la='ls -lA'
+alias l='ls -la'
 
 alias s='ssh -X'
 alias g='git'
@@ -35,9 +60,12 @@ function gitlines {
     END { print ll "," ac "," rc }'
 }
 
+
+# External Scripts
 export PATH="$PATH:$HOME/.bootstrap/bin"
 
-# Sudoless Cocoapods.
+
+# Sudoless Cocoapods
 # See https://guides.cocoapods.org/using/getting-started.html#sudo-less-installation
 export GEM_HOME=$HOME/.gem
 export PATH=$GEM_HOME/bin:$PATH
