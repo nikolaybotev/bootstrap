@@ -1,12 +1,13 @@
 [user]
-    name = _name_
-    email = _email_
+    name = Nikolay Botev
+    email = nikolaybotev.b@gmail.com
 [core]
     excludesfile = ~/.gitignore
 [fetch]
     prune = true
 [push]
     default = current
+    followTags = true
 [color]
     ui = true
 [format]
