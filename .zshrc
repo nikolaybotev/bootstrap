@@ -25,6 +25,11 @@ zle -N down-line-or-beginning-search
 bindkey "^[[B" down-line-or-beginning-search
 
 
+# Word Boundary
+autoload -U select-word-style
+select-word-style bash
+
+
 # Autocomplete
 autoload -U compinit && compinit
 
