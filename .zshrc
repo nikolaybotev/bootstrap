@@ -52,7 +52,7 @@ alias g='git'
 alias gw='./gradlew'
 
 function gpo {
-  git push 2>&1 | awk '{ print } $1 == "remote:" && $2 ~ /^https:/ { system("open " $2) }'
+  git push 2>&1 | awk '{ print } $1 == "remote:" && $2 ~ /^https:\/\/.+\/pull\/new\// { system("open " $2) }'
 }
 
 function gpc {
