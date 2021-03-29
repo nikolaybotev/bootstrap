@@ -16,6 +16,11 @@ setopt pushdminus
 setopt sharehistory
 
 
+# History Size
+HISTSIZE=500000
+SAVEHIST=100000
+
+
 # Up/Down Arrow History Search
 autoload -U up-line-or-beginning-search
 zle -N up-line-or-beginning-search
@@ -48,8 +53,10 @@ alias la='ls -lA'
 alias l='ls -la'
 
 alias s='ssh -X'
-alias g='git'
+
+# - Development (git, gradle etc)
 alias gw='./gradlew'
+alias g='git'
 
 function gpo {
   git push 2>&1 | awk '{ print } $1 == "remote:" && $2 ~ /^https:\/\/.+\/pull\/new\// { system("open " $2) }'
@@ -87,4 +94,8 @@ export PATH="$PATH:$HOME/.bootstrap/bin"
 # See https://guides.cocoapods.org/using/getting-started.html#sudo-less-installation
 export GEM_HOME=$HOME/.gem
 export PATH=$GEM_HOME/bin:$PATH
+
+
+# Local commands
+[ -f ~/.zshrc_local ] && . ~/.zshrc_local
 
