@@ -63,7 +63,7 @@ function gpo {
 }
 
 function gpc {
-  git checkout master
+  git checkout main
   git pull 2>&1 | awk '{ print } $2 == "[deleted]" { sub(/origin\//, "", $5); system("git branch -D " $5) }'
 }
 
