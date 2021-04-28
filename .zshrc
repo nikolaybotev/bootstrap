@@ -63,7 +63,8 @@ function gpo {
 }
 
 function gpc {
-  git checkout main
+  local mainBranch=ma$(git show-branch main > /dev/null 2>&1 && echo -n in || echo -n ster)
+  git checkout $mainBranch
   git pull 2>&1 | awk '{ print } $2 == "[deleted]" { sub(/origin\//, "", $5); system("git branch -D " $5) }'
 }
 
