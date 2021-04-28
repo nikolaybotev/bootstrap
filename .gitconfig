@@ -8,6 +8,8 @@
 [push]
     default = current
     followTags = true
+[pull]
+    ff = only
 [color]
     ui = true
 [format]
