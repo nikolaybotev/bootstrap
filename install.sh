@@ -64,6 +64,7 @@ git clone https://github.com/sindresorhus/pure.git "$HOME/.zsh/pure"
 # Configure zsh
 echo "Configuring zsh ..."
 cp ~/.bootstrap/.zshrc ~
+[ -f "~/.bootstrap/$(uname).zshrc_local" ] && cp "~/.bootstrap/$(uname).zshrc_local" ~/.zshrc_local
 
 
 # Open Websites for Tools to install manually
