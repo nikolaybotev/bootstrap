@@ -16,9 +16,10 @@ setopt pushdminus
 setopt sharehistory
 
 
-# History Size
+# History File and Size
 HISTSIZE=500000
 SAVEHIST=100000
+HISTFILE=~/.zsh_history
 
 
 # Up/Down Arrow History Search
