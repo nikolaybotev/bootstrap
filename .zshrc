@@ -92,12 +92,6 @@ function gitlines {
 export PATH="$PATH:$HOME/.bootstrap/bin"
 
 
-# Sudoless Cocoapods
-# See https://guides.cocoapods.org/using/getting-started.html#sudo-less-installation
-export GEM_HOME=$HOME/.gem
-export PATH=$GEM_HOME/bin:$PATH
-
-
 # Local commands
 [ -f ~/.zshrc_local ] && . ~/.zshrc_local
 

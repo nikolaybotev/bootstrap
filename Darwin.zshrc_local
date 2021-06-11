@@ -1,0 +1,17 @@
+# Sudoless Cocoapods
+# See https://guides.cocoapods.org/using/getting-started.html#sudo-less-installation
+[ -d "$HOME/.gem" ] && {
+  export GEM_HOME=$HOME/.gem
+  export PATH=$GEM_HOME/bin:$PATH
+}
+
+# Local homebrew... only for x86_64
+[ -d "$HOME/homebrew/bin" ] && {
+  export PATH="$HOME/homebrew/bin:$PATH"
+}
+
+# fnm
+whence fnm > /dev/null && {
+  eval "$(fnm env)"
+}
+
