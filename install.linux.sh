@@ -28,4 +28,4 @@ cp ~/.bootstrap/.zshrc ~
 
 # Install and Select zsh
 sudo apt install zsh
-chsh -s /bin/zsh]
+chsh -s /bin/zsh
