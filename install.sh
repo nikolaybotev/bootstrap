@@ -36,4 +36,4 @@ cp ~/.bootstrap/.zshrc ~
 
 
 # Run OS-specific install
-. "./install.${os}.sh"
+. "~/.bootstrap/install.${os}.sh"
