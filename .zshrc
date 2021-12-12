@@ -48,9 +48,13 @@ autoload -U promptinit; promptinit
 prompt pure
 
 
+# Colors for ls
+[ -x /usr/bin/dircolors ] && eval $(/usr/bin/dircolors -b)
+
+
 # Aliases and Functions
 
-alias ls='ls -hFG'
+alias ls='ls --color -hF'
 alias ll='ls -l'
 alias la='ls -lA'
 alias l='ls -la'
