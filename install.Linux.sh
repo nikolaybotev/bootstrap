@@ -6,4 +6,4 @@ if [ "$(uname)" != 'Linux' ]; then echo "This script only runs on Linux."; exit 
 
 # Install and Select zsh
 sudo apt install zsh
-chsh -s /bin/zsh
+sudo chsh -s /bin/zsh "$USER"
