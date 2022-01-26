@@ -62,6 +62,8 @@ alias l='ls -la'
 alias s='ssh -X'
 
 # - Development (git, gradle etc)
+export GPG_TTY=$(tty) # so that gpg can prompt for a password when invoked from git
+
 alias gw='./gradlew'
 alias g='git'
 

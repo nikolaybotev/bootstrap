@@ -1,10 +1,13 @@
 [user]
     name = Nikolay Botev
     email = nikolaybotev.b@gmail.com
+    signingkey =
 [core]
     excludesfile = ~/.gitignore
 [init]
     defaultBranch = main
+[commit]
+    gpgsign = true
 [fetch]
     prune = true
 [push]
