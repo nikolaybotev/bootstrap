@@ -1,6 +1,6 @@
 [user]
-    name = Nikolay Botev
-    email = nikolaybotev.b@gmail.com
+    name = _name_
+    email = _email_
     signingkey =
 [core]
     excludesfile = ~/.gitignore

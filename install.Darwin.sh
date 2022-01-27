@@ -36,8 +36,8 @@ defaults write com.apple.finder ShowPathbar -bool true
 
 # Write .gitconfig and .gitignore
 echo "Configuring git ..."
-user_fullname="$(dscacheutil -q user -a name "$(whoami)" |awk '$1 == "gecos:" { print $2 " " $3 }')"
-user_email="$(dscl . readpl "$HOME" dsAttrTypeNative:LinkedIdentity appleid.apple.com:linked\ identities:0:full\ name | awk '{print $4}')"
+user_fullname="$(id -F)"
+user_email="$(defaults read MobileMeAccounts | plutil -convert json -o - - | python -c 'import json, sys; print(json.load(sys.stdin)["Accounts"][0]["AccountID"])')"
 echo "Git Name: $user_fullname"
 echo "Git E-mail: $user_email"
 echo "Press return to continue . . ." && read
