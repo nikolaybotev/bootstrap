@@ -19,7 +19,7 @@ plutil -replace "Window Settings.Novel.useOptionAsMetaKey" -bool true ~/Library/
 #
 # dock auto-hide
 defaults write com.apple.dock autohide -bool true
-# tap to cliek
+# tap to click
 defaults write com.apple.driver.AppleBluetoothMultitouch.trackpad Clicking -bool true
 defaults -currentHost write -g com.apple.mouse.tapBehavior -int 1
 defaults write com.apple.AppleMultitouchTrackpad Clicking -bool true
