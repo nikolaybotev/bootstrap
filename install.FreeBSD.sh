@@ -6,4 +6,4 @@ if [ "$(uname)" != 'FreeBSD' ]; then echo "This script only runs on FreeBSD."; e
 
 # Install and Select zsh
 sudo pkg install zsh
-sudo chsh -s /bin/zsh "$USER"
+sudo chsh -s /usr/local/bin/zsh "$USER"
