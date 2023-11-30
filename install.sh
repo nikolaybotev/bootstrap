@@ -2,8 +2,8 @@
 
 # Check Preconditions
 os="$(uname)"
-if [ "$os" != 'Darwin' -a "$os" != 'Linux' ]; then
-  echo "This script only runs on macOS and Linux."
+if [ "$os" != 'Darwin' -a "$os" != 'Linux' -a "$os" != "FreeBSD" ]; then
+  echo "This script only runs on macOS, Linux and FreeBSD."
   echo "$os detected."
   exit 1
 fi
