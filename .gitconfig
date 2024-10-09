@@ -8,6 +8,8 @@
     defaultBranch = main
 [commit]
     gpgsign = true
+[tag]
+    gpgsign = true
 [fetch]
     prune = true
 [push]
