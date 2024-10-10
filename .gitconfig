@@ -3,6 +3,7 @@
     email = _email_
     signingkey =
 [core]
+    autocrlf = true
     excludesfile = ~/.gitignore
 [init]
     defaultBranch = main
