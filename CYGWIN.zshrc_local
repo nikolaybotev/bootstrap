@@ -1,5 +1,10 @@
+# Prompt
+eval "$(starship init zsh)"
+
+# International characters support
 export LANG=en_US.UTF-8
 
+# Shortcuts
 bindkey '^[[1;5D' backward-word       # Ctrl-Left
 bindkey '^[[1;5C' forward-word        # Ctrl-Right
 bindkey '^[[H'    beginning-of-line   # Home
