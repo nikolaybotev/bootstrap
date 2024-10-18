@@ -1,9 +1,9 @@
 #!/bin/sh -e
 
 # Check Preconditions
-os="$(uname)"
-if [ "$os" != 'Darwin' -a "$os" != 'Linux' -a "$os" != "FreeBSD" ]; then
-  echo "This script only runs on macOS, Linux and FreeBSD."
+os="$(uname | awk -F_ '{print $1}')"
+if [ "$os" != 'Darwin' -a "$os" != 'Linux' -a "$os" != "FreeBSD" -a "$os" != "CYGWIN" ]; then
+  echo "This script only runs on macOS, Linux, Cygwin and FreeBSD."
   echo "$os detected."
   exit 1
 fi
@@ -24,9 +24,11 @@ echo "Configuring vim ..."
 cp ~/.bootstrap/.vimrc ~
 
 
-# Install Pure Prompt
-mkdir -p "$HOME/.zsh"
-git clone https://github.com/sindresorhus/pure.git "$HOME/.zsh/pure"
+# Install Pure Prompt (does not work on Cygwin)
+if [ "$os" != "CYGWIN" ]; then
+  mkdir -p "$HOME/.zsh"
+  git clone https://github.com/sindresorhus/pure.git "$HOME/.zsh/pure"
+fi
 
 
 # Configure zsh
