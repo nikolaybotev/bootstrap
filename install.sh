@@ -25,10 +25,8 @@ cp ~/.bootstrap/.vimrc ~
 
 
 # Install Pure Prompt (does not work on Cygwin)
-if [ "$os" != "CYGWIN" ]; then
-  mkdir -p "$HOME/.zsh"
-  git clone https://github.com/sindresorhus/pure.git "$HOME/.zsh/pure"
-fi
+mkdir -p "$HOME/.zsh"
+git clone https://github.com/sindresorhus/pure.git "$HOME/.zsh/pure"
 
 
 # Configure zsh
