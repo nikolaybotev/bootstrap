@@ -7,3 +7,10 @@ bindkey '^[[1;5C' forward-word        # Ctrl-Right
 bindkey '^[[H'    beginning-of-line   # Home
 bindkey '^[[F'    end-of-line         # End
 bindkey '^H'      backward-kill-word  # Ctrl-Backspace
+
+# Reset terminal with Ctrl-K (Ctrl-L clears the terminal)
+_reset_screen() {
+    /usr/bin/reset
+}
+zle -N _reset_screen
+bindkey '^K' _reset_screen
