@@ -21,6 +21,7 @@ git clone https://github.com/nikolaybotevb/bootstrap.git ~/.bootstrap
 
 # Write .vimrc
 echo "Configuring vim ..."
+[ -f ~/.vimrc ] && cp ~/.vimrc ~/.vimrc.backup
 cp ~/.bootstrap/.vimrc ~
 
 
@@ -31,7 +32,9 @@ git clone https://github.com/sindresorhus/pure.git "$HOME/.zsh/pure"
 
 # Configure zsh
 echo "Configuring zsh ..."
+[ -f ~/.zshrc ] && cp ~/.zshrc ~/.zshrc.backup
 cp ~/.bootstrap/.zshrc ~
+[ -f ~/.zshrc_local ] && cp ~/.zshrc_local ~/.zshrc_local.backup
 [ -f "${HOME}/.bootstrap/${os}.zshrc_local" ] && cp "${HOME}/.bootstrap/${os}.zshrc_local" ~/.zshrc_local
 
 

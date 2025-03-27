@@ -41,6 +41,7 @@ user_email="$(defaults read MobileMeAccounts | plutil -convert json -o - - | pyt
 echo "Git Name: $user_fullname"
 echo "Git E-mail: $user_email"
 echo "Press return to continue . . ." && read
+[ -f ~/.gitconfig ] && cp ~/.gitconfig ~/.gitconfig.backup
 sed -e "s/_name_/${user_fullname}/g; s/_email_/${user_email}/g" ~/.bootstrap/.gitconfig > ~/.gitconfig
 cp ~/.bootstrap/.gitignore ~
 
