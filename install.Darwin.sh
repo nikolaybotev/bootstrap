@@ -32,6 +32,8 @@ defaults write NSGlobalDomain InitialKeyRepeat -int 15
 #defaults write com.apple.universalaccess mouseDriverCursorSize -float 1.5
 # finder
 defaults write com.apple.finder ShowPathbar -bool true
+# disable language bubble under text cursor
+defaults write com.apple.HIToolbox AppleInputSourceHistory -bool false
 
 
 # Write .gitconfig and .gitignore
