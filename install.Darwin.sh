@@ -39,7 +39,7 @@ defaults write com.apple.HIToolbox AppleInputSourceHistory -bool false
 # Write .gitconfig and .gitignore
 echo "Configuring git ..."
 user_fullname="$(id -F)"
-user_email="$(defaults read MobileMeAccounts | plutil -convert json -o - - | python3 -c 'import json, sys; print(json.load(sys.stdin)["Accounts"][0]["AccountID"])')"
+user_email="$(defaults read MobileMeAccounts | plutil -convert json -o - - | jq -r '.Accounts[0].AccountID')"
 echo "Git Name: $user_fullname"
 echo "Git E-mail: $user_email"
 echo "Press return to continue . . ." && read
