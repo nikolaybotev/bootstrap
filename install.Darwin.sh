@@ -52,8 +52,8 @@ cp ~/.bootstrap/.gitignore ~
 # - git graphical diff tools
 open https://www.perforce.com/downloads/visual-merge-tool
 open https://www.scootersoftware.com/download.php
-# - standard tools: homebrew, jenv, fnm
+# - standard tools: homebrew, sdkman, fnm
 open https://brew.sh
-open http://www.jenv.be
+open https://sdkman.io
 open https://github.com/Schniz/fnm#installation
 
