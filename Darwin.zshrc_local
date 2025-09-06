@@ -26,6 +26,7 @@ export PATH=$PATH:$ANDROID_HOME/tools:$ANDROID_HOME/tools/bin:$ANDROID_HOME/plat
 # Deno
 export DENO_INSTALL="/Users/nikolay/.deno"
 export PATH="$DENO_INSTALL/bin:$PATH"
+[ -f "$DENO_INSTALL/env" ] && . "$DENO_INSTALL/env"
 
 # Add deno completions to search path
 if [[ ":$FPATH:" != *":/Users/nikolay/.zsh/completions:"* ]]; then export FPATH="/Users/nikolay/.zsh/completions:$FPATH"; fi
