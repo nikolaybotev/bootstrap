@@ -24,23 +24,19 @@ export PATH=$PATH:$ANDROID_HOME/tools:$ANDROID_HOME/tools/bin:$ANDROID_HOME/plat
 
 
 # Deno
-export DENO_INSTALL="/Users/nikolay/.deno"
+export DENO_INSTALL="$HOME/.deno"
 export PATH="$DENO_INSTALL/bin:$PATH"
 [ -f "$DENO_INSTALL/env" ] && . "$DENO_INSTALL/env"
 
 # Add deno completions to search path
-if [[ ":$FPATH:" != *":/Users/nikolay/.zsh/completions:"* ]]; then export FPATH="/Users/nikolay/.zsh/completions:$FPATH"; fi
+if [[ ":$FPATH:" != *":$HOME/.zsh/completions:"* ]]; then export FPATH="$HOME/.zsh/completions:$FPATH"; fi
 
 
 # The next line updates PATH for the Google Cloud SDK.
-if [ -f '/Users/nikolay/google-cloud-sdk/path.zsh.inc' ]; then . '/Users/nikolay/google-cloud-sdk/path.zsh.inc'; fi
+if [ -f "$HOMEBREW_PREFIX/share/google-cloud-sdk/path.zsh.inc" ]; then . "$HOMEBREW_PREFIX/share/google-cloud-sdk/path.zsh.inc"; fi
 
 # The next line enables shell command completion for gcloud.
-if [ -f '/Users/nikolay/google-cloud-sdk/completion.zsh.inc' ]; then . '/Users/nikolay/google-cloud-sdk/completion.zsh.inc'; fi
-
-
-# AWS CLI
-export PATH="$HOME/aws-cli:$PATH"
+if [ -f "$HOMEBREW_PREFIX/share/google-cloud-sdk/completion.zsh.inc" ]; then . "$HOMEBREW_PREFIX/share/google-cloud-sdk/completion.zsh.inc"; fi
 
 
 # Cursor agent
@@ -57,3 +53,7 @@ fi
 #THIS MUST BE AT THE END OF THE FILE FOR SDKMAN TO WORK!!!
 export SDKMAN_DIR="$HOME/.sdkman"
 [[ -s "$HOME/.sdkman/bin/sdkman-init.sh" ]] && source "$HOME/.sdkman/bin/sdkman-init.sh"
+
+
+# Docker Desktop (user install)
+[ -d $HOME/.docker/bin ] && export PATH="$PATH:$HOME/.docker/bin"
