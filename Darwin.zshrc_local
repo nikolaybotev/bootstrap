@@ -44,7 +44,7 @@ export PATH="$HOME/.local/bin:$PATH"
 
 
 # fnm
-FNM_PATH="/opt/homebrew/opt/fnm/bin"
+FNM_PATH="$HOMEBREW_PREFIX/opt/fnm/bin"
 if [ -d "$FNM_PATH" ]; then
   eval "`fnm env`"
 fi
