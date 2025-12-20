@@ -34,6 +34,8 @@ git clone https://github.com/sindresorhus/pure.git "$HOME/.zsh/pure"
 echo "Configuring zsh ..."
 [ -f ~/.zshrc ] && cp ~/.zshrc ~/.zshrc.backup
 cp ~/.bootstrap/.zshrc ~
+[ -f ~/.zshrc_common ] && cp ~/.zshrc_common ~/.zshrc_common.backup
+cp ~/.bootstrap/.zshrc_common ~
 [ -f ~/.zshrc_local ] && cp ~/.zshrc_local ~/.zshrc_local.backup
 [ -f "${HOME}/.bootstrap/${os}.zshrc_local" ] && cp "${HOME}/.bootstrap/${os}.zshrc_local" ~/.zshrc_local
 
