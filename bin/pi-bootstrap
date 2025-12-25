@@ -1,0 +1,111 @@
+#!/bin/bash
+
+# pi-bootstrap
+#
+# Setup an Ubuntu Raspberry Pi image for headless boot.
+#
+# Copyright Nikolay Botev, MIT License
+#
+
+# Default settings
+#
+DEFAULT_VOLUME=/Volumes/system-boot
+DEFAULT_HOSTNAME="ubuntu-$(date +%Y%m%d)"
+DEFAULT_WIFI_REGION=US
+DEFAULT_SSH_KEY="$HOME/.ssh/id_rsa.pub"
+
+# Gather settings input
+#
+echo -n "Enter the hostname for the new VM [$DEFAULT_HOSTNAME]: " && read IN_HOSTNAME
+HOSTNAME="${IN_HOSTNAME:-$DEFAULT_HOSTNAME}"
+
+echo -n "Enter the name of a Wi-Fi network to connect to [leave blank for no Wi-FI]: " && read WIFI_NAME
+if [ -n "$WIFI_NAME" ]; then
+  echo -n "Enter the password of Wi-Fi network $WIFI_NAME: " && read WIFI_PASS
+  echo -n "Enter the Wi-Fi region [$DEFAULT_WIFI_REGION]: " && read IN_WIFI_REGION
+  WIFI_REGION="${IN_WIFI_REGION:-$DEFAULT_WIFI_REGION}"
+fi
+
+echo -n "Enter the path of your SSH key file [$DEFAULT_SSH_KEY]: " && read IN_SSH_KEY
+SSH_KEY="${IN_SSH_KEY:-$DEFAULT_SSH_KEY}"
+
+echo -n "Enter the boot volume location [$DEFAULT_VOLUME]: " && read IN_VOLUME
+VOLUME="${IN_VOLUME:-$DEFAULT_VOLUME}"
+
+# Confirm settings
+#
+echo
+echo "Hostname:          $HOSTNAME"
+echo "Wi-Fi Netowrk:     ${WIFI_NAME:-(no wifi)}"
+if [ -n "$WIFI_NAME" ]; then
+  echo "Wi-Fi Region:      $WIFI_REGION"
+fi
+echo "SSH Key file:      $SSH_KEY"
+echo "Linux Boot Volume: $VOLUME"
+echo "Press return to continue."
+read
+
+# Execute
+#
+# - Set hostname
+echo "Setting hostname to $HOSTNAME ..."
+# https://cloudinit.readthedocs.io/en/latest/topics/modules.html#update-hostname
+cat >> "$VOLUME/user-data" <<!
+
+hostname: $HOSTNAME"
+!
+
+# - Configure Wi-Fi connection
+if [ -n "$WIFI_NAME" ]; then
+  echo "Setting up Wi-Fi connection to $WIFI_NAME ..."
+  cp "$VOLUME/network-config" "$VOLUME/network-config.orig"
+  cat >> "$VOLUME/network-config" <<!
+wifis:
+  wlan0:
+    dhcp4: true
+    optional: true
+    access-points:
+      "$WIFI_NAME":
+        password: "$WIFI_PASS"
+!
+
+  echo "Setting Wi-Fi region to $WIFI_REGION ..."
+  echo "Removing world visibility of Wi-Fi password ..."
+  cat >> "$VOLUME/user-data" <<!
+
+runcmd:
+- [ sed, -i, -e, s/REGDOMAIN=.*/REGDOMAIN=US/, /etc/default/crda ]
+- [ iw, reg, set, US ]
+- [ mv, /boot/firmware/network-config.orig, /boot/firmware/network-config ]
+- [ chmod, -R, go-rwx, /etc/netplan/ ]
+!
+fi
+
+# - Enable mDNS (aka Bonjour / Zeroconf)
+echo "Setting up avahi-daemon ..."
+cat >> "$VOLUME/user-data" <<!
+
+package_update: true
+package_upgrade: true
+packages:
+- avahi-daemon
+!
+
+# - Configure user SSH key login
+# https://askubuntu.com/questions/1302840/ubuntu-setup-user-data-ssh
+# https://g.masse.me/blog/2020/01/14/HOW-TO-pre-configure-your-Ubuntu-installation-for-a-Raspberry-Pi/
+echo "Adding user SSH key ..."
+cat >> "$VOLUME/user-data" <<!
+
+system_info:
+  default_user:
+    ssh_authorized_keys:
+      - $(cat "$SSH_KEY")
+    sudo: ALL=(ALL) NOPASSWD:ALL
+!
+
+echo "Disabling SSH password auth ..."
+sed -i.bak -e "s/ssh_pwauth: true/ssh_pwauth: false/" "$VOLUME/user-data"
+rm "$VOLUME/user-data.bak"
+
+echo "All done."
