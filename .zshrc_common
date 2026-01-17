@@ -54,6 +54,10 @@ prompt pure
 
 # Aliases and Functions
 
+function m {
+  mkdir -p "$1" && cd "$1"
+}
+
 alias ls='ls --color -hF'
 alias ll='ls -l'
 alias la='ls -lA'
