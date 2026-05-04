@@ -1,0 +1,28 @@
+{
+  // Tree indent
+  "workbench.tree.indent": 22,
+
+  // Show ruler at 120 characters
+  "editor.rulers": [120],
+
+  // GitLens settings - disable by default
+  "gitlens.currentLine.enabled": false,
+  "gitlens.codeLens.enabled": false,
+
+  // Trim trailing whitespace and empty lines at end on save
+  "files.trimTrailingWhitespace": true,
+  "files.trimFinalNewlines": true,
+
+  // Disable preview mode for files - this may help with chat file links
+  "workbench.editor.enablePreview": false,
+  "workbench.editor.enablePreviewFromQuickOpen": false,
+
+  // Force files to open in editor tabs instead of preview
+  "workbench.editor.revealIfOpen": true,
+
+  // Additional settings that might help
+  "workbench.editor.openPositioning": "right",
+  "workbench.editor.focusRecentEditorAfterClose": true,
+  "java.compile.nullAnalysis.mode": "automatic",
+  "remote.autoForwardPortsFallback": 0
+}
