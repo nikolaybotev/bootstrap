@@ -58,6 +58,4 @@ open https://www.perforce.com/downloads/visual-merge-tool
 open https://www.scootersoftware.com/download.php
 # - standard tools: homebrew, sdkman, fnm
 open https://brew.sh
-open https://sdkman.io
-open https://github.com/Schniz/fnm#installation
-
+open https://mise.en.dev
