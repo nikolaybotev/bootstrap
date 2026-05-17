@@ -11,6 +11,10 @@ plutil -replace "Default Window Settings" -string Novel ~/Library/Preferences/co
 plutil -replace "Startup Window Settings" -string Novel ~/Library/Preferences/com.apple.Terminal.plist
 plutil -replace "Window Settings.Novel.shellExitAction" -integer 1 ~/Library/Preferences/com.apple.Terminal.plist
 plutil -replace "Window Settings.Novel.useOptionAsMetaKey" -bool true ~/Library/Preferences/com.apple.Terminal.plist
+# NSKeyedArchiver NSFont blob: Courier, 15pt
+plutil -replace "Window Settings.Novel.Font" -data \
+  'YnBsaXN0MDDUAQIDBAUGBwpYJHZlcnNpb25ZJGFyY2hpdmVyVCR0b3BYJG9iamVjdHMSAAGGoF8QD05TS2V5ZWRBcmNoaXZlctEICVRyb290gAGkCwwVFlUkbnVsbNQNDg8QERITFFZOU1NpemVYTlNmRmxhZ3NWTlNOYW1lViRjbGFzcyNALgAAAAAAABAQgAKAA1dDb3VyaWVy0hcYGRpaJGNsYXNzbmFtZVgkY2xhc3Nlc1ZOU0ZvbnSiGRtYTlNPYmplY3QIERokKTI3SUxRU1heZ253foWOkJKUnKGstby/AAAAAAAAAQEAAAAAAAAAHAAAAAAAAAAAAAAAAAAAAMg=' \
+  ~/Library/Preferences/com.apple.Terminal.plist
 
 
 # Configure macOS UI Preferences
