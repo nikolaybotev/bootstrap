@@ -1,0 +1,41 @@
+#!/bin/bash
+
+physical=$(sysctl -n hw.memsize)
+swap_used_mb=$(sysctl -n vm.swapusage | sed -E 's/.*used = ([0-9.]+)M.*/\1/')
+
+vm_stat | awk -v physical="$physical" -v swap_used_mb="$swap_used_mb" '
+    /page size of/                 { pg_size = $8 }
+    /Pages free:/                  { free = $NF }
+    /Anonymous pages:/             { anon = $NF }
+    /Pages purgeable:/             { purgeable = $NF }
+    /Pages wired down:/            { wired = $NF }
+    /File-backed pages:/           { file_backed = $NF }
+    /Pages stored in compressor/   { uncompressed = $NF }
+    /Pages occupied by compressor/ { compressed = $NF }
+
+    END {
+        gb = 1024 * 1024 * 1024
+
+        physical_gb = physical / gb
+        app_gb      = ((anon - purgeable) * pg_size) / gb
+        wired_gb    = (wired * pg_size) / gb
+        uncomp_gb   = (uncompressed * pg_size) / gb
+        comp_gb     = (compressed * pg_size) / gb
+        cached_gb   = ((file_backed + purgeable) * pg_size) / gb
+        free_gb     = (free * pg_size) / gb
+
+        used_gb        = physical_gb - cached_gb - free_gb
+        used_uncomp_gb = used_gb + (uncomp_gb - comp_gb)
+        other_gb       = used_gb - (app_gb + wired_gb + comp_gb)
+
+        printf "Physical Memory: %.2f GB\n", physical_gb
+        printf "App Memory:      %.2f GB\n", app_gb
+        printf "Wired Memory:    %.2f GB\n", wired_gb
+        printf "Compressed:      %.2f GB (%.2f GB uncompressed)\n", comp_gb, uncomp_gb
+        printf "Other:           %.2f GB\n", other_gb
+        printf "Memory Used:     %.2f GB (%.2f GB uncompressed)\n", used_gb, used_uncomp_gb
+        printf "Cached Files:    %.2f GB\n", cached_gb
+        printf "Free:            %.2f GB\n", free_gb
+        printf "Swap Used:       %.2f GB\n", swap_used_mb / 1024
+    }
+'
