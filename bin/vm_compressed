@@ -36,6 +36,7 @@ vm_stat | awk -v physical="$physical" -v swap_used_mb="$swap_used_mb" '
         printf "Memory Used:     %.2f GB (%.2f GB uncompressed)\n", used_gb, used_uncomp_gb
         printf "Cached Files:    %.2f GB\n", cached_gb
         printf "Free:            %.2f GB\n", free_gb
+        printf "Free (Total):    %.2f GB\n", free_gb + cached_gb
         printf "Swap Used:       %.2f GB\n", swap_used_mb / 1024
     }
 '
