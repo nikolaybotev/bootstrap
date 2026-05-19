@@ -1,4 +1,5 @@
-#!/bin/sh -e
+#!/bin/sh
+set -e
 
 # Check Preconditions
 os="$(uname | awk -F_ '{print $1}')"
@@ -13,10 +14,23 @@ if [ -d ~/.bootstrap ]; then
   exit 1
 fi
 
+if [ "$os" = Darwin ] && ! xcode-select -p >/dev/null 2>&1; then
+  echo "Xcode Command Line Tools are required for git."
+  echo "Requesting Xcode Command Line Tools installation..."
+  xcode-select --install
+  printf "Press return once Xcode Command Line Tools installation has completed."
+  read -r _
+fi
+
+if ! git --version >/dev/null 2>&1; then
+  echo "error: git is not available." >&2
+  exit 1
+fi
+
 
 # Clone Repository
 echo "Getting code ..."
-git clone https://github.com/nikolaybotevb/bootstrap.git ~/.bootstrap
+git clone https://github.com/nikolaybotev/bootstrap.git ~/.bootstrap
 
 
 # Write .vimrc
