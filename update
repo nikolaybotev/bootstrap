@@ -1,0 +1,221 @@
+#!/usr/bin/env bash
+# Sync bootstrap from ~/.bootstrap (git pull) into $HOME.
+# Run from anywhere:  ~/.bootstrap/update [--override] [--dry-run]
+
+set -euo pipefail
+
+BOOTSTRAP_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+HOME_DIR="${HOME:?}"
+
+usage() {
+  cat <<'EOF'
+Usage: ~/.bootstrap/update [options]
+
+  git pull in ~/.bootstrap, then copy "safe" dotfiles into $HOME when they
+  still matched the repo copy before the pull (no local edits).
+
+Options:
+  --override   Copy safe files even when $HOME copies diverged from the repo
+  --dry-run    Show what would happen; do not pull or copy
+  -h, --help   Show this help
+
+Safe files (synced when in sync, or with --override):
+  .zshrc_common, .vimrc, .gitignore, .zshrc_local (from OS template)
+
+Report only (never auto-copied; shows upstream template diff after pull):
+  .zshrc, .gitconfig
+
+bin/ lives under ~/.bootstrap and is updated in place by git pull (on PATH).
+EOF
+}
+
+override=0
+dry_run=0
+
+while (($#)); do
+  case "$1" in
+    --override) override=1 ;;
+    --dry-run)  dry_run=1 ;;
+    -h|--help)  usage; exit 0 ;;
+    *) echo "Unknown option: $1" >&2; usage >&2; exit 1 ;;
+  esac
+  shift
+done
+
+os="$(uname | awk -F_ '{print $1}')"
+case "$os" in
+  Darwin|Linux|FreeBSD|CYGWIN) ;;
+  *)
+    echo "Unsupported OS: $os" >&2
+    exit 1
+    ;;
+esac
+
+os_local_src="${os}.zshrc_local"
+
+# home_relpath -> repo_relpath (under BOOTSTRAP_ROOT)
+declare -a SYNC_HOME=(.zshrc_common .vimrc .gitignore .zshrc_local)
+declare -a SYNC_REPO=(.zshrc_common .vimrc .gitignore "$os_local_src")
+
+declare -a REPORT_HOME=(.zshrc .gitconfig)
+declare -a REPORT_REPO=(.zshrc .gitconfig)
+
+log() { printf '%s\n' "$*"; }
+section() { printf '\n== %s ==\n' "$*"; }
+
+home_path() { printf '%s/%s' "$HOME_DIR" "$1"; }
+repo_path() { printf '%s/%s' "$BOOTSTRAP_ROOT" "$1"; }
+
+files_identical() {
+  local a=$1 b=$2
+  [[ -f $a && -f $b ]] && cmp -s "$a" "$b"
+}
+
+git_pull() {
+  if ((dry_run)); then
+    log "(dry-run) would run: git -C $BOOTSTRAP_ROOT pull --ff-only"
+    return 0
+  fi
+  git -C "$BOOTSTRAP_ROOT" pull --ff-only
+}
+
+if [[ ! -d $BOOTSTRAP_ROOT/.git ]]; then
+  echo "Not a git checkout: $BOOTSTRAP_ROOT" >&2
+  exit 1
+fi
+
+if [[ ! -f $BOOTSTRAP_ROOT/$os_local_src ]]; then
+  echo "Missing OS template: $BOOTSTRAP_ROOT/$os_local_src" >&2
+  exit 1
+fi
+
+if ! git -C "$BOOTSTRAP_ROOT" diff --quiet || ! git -C "$BOOTSTRAP_ROOT" diff --cached --quiet; then
+  log "warning: ~/.bootstrap has uncommitted changes; pull may fail or mix local edits"
+fi
+
+old_head="$(git -C "$BOOTSTRAP_ROOT" rev-parse HEAD)"
+
+declare -a in_sync=() diverged=()
+
+section "Pre-pull sync check"
+for i in "${!SYNC_HOME[@]}"; do
+  home_rel=${SYNC_HOME[$i]}
+  repo_rel=${SYNC_REPO[$i]}
+  home_f=$(home_path "$home_rel")
+  repo_f=$(repo_path "$repo_rel")
+
+  if [[ ! -f $home_f ]]; then
+    log "  $home_rel: missing in \$HOME (will install from repo after pull)"
+    in_sync+=("$i")
+  elif files_identical "$home_f" "$repo_f"; then
+    log "  $home_rel: in sync with repo"
+    in_sync+=("$i")
+  else
+    log "  $home_rel: diverged from repo (local edits or stale copy)"
+    diverged+=("$i")
+  fi
+done
+
+section "Git pull"
+if ((dry_run)); then
+  git_pull
+  new_head="$old_head"
+  log "(dry-run) using HEAD $old_head for upstream diff preview"
+else
+  git_pull
+  new_head="$(git -C "$BOOTSTRAP_ROOT" rev-parse HEAD)"
+  if [[ $old_head == "$new_head" ]]; then
+    log "Already up to date ($new_head)"
+  else
+    log "Updated $old_head -> $new_head"
+  fi
+fi
+
+section "Applying safe file updates"
+updated=()
+unchanged=()
+skipped=()
+forced=()
+
+for i in "${!SYNC_HOME[@]}"; do
+  home_rel=${SYNC_HOME[$i]}
+  repo_rel=${SYNC_REPO[$i]}
+  home_f=$(home_path "$home_rel")
+  repo_f=$(repo_path "$repo_rel")
+
+  was_in_sync=0
+  for j in "${in_sync[@]}"; do
+    [[ $j -eq $i ]] && was_in_sync=1 && break
+  done
+
+  if ((was_in_sync)); then
+    if [[ ! -f $home_f ]] || ! files_identical "$home_f" "$repo_f"; then
+      if ((dry_run)); then
+        log "  would update: $home_rel <- $repo_rel"
+        updated+=("$home_rel")
+      else
+        cp "$repo_f" "$home_f"
+        log "  updated: $home_rel"
+        updated+=("$home_rel")
+      fi
+    else
+      log "  unchanged: $home_rel"
+      unchanged+=("$home_rel")
+    fi
+  elif ((override)); then
+    if ((dry_run)); then
+      log "  would force: $home_rel <- $repo_rel (--override)"
+      forced+=("$home_rel")
+    else
+      cp "$repo_f" "$home_f"
+      log "  forced: $home_rel (--override)"
+      forced+=("$home_rel")
+    fi
+  else
+    log "  skipped: $home_rel (diverged; use --override to replace)"
+    skipped+=("$home_rel")
+  fi
+done
+
+section "bin/"
+log "  Scripts under ~/.bootstrap/bin are used in place (no copy). Updated by git pull."
+
+section "Manual review (not auto-copied)"
+for i in "${!REPORT_HOME[@]}"; do
+  home_rel=${REPORT_HOME[$i]}
+  repo_rel=${REPORT_REPO[$i]}
+  home_f=$(home_path "$home_rel")
+  repo_f=$(repo_path "$repo_rel")
+
+  if [[ $old_head != "$new_head" ]] && ! ((dry_run)); then
+    if git -C "$BOOTSTRAP_ROOT" diff --quiet "$old_head" "$new_head" -- "$repo_rel"; then
+      log "  $home_rel: no upstream template changes"
+    else
+      log "  $home_rel: upstream template changed:"
+      git -C "$BOOTSTRAP_ROOT" diff "$old_head" "$new_head" -- "$repo_rel" | sed 's/^/    /'
+    fi
+  elif ((dry_run)); then
+    log "  $home_rel: (dry-run) run without --dry-run to see upstream template diff"
+  else
+    log "  $home_rel: no upstream template changes"
+  fi
+
+  if [[ -f $home_f && -f $repo_f ]] && ! files_identical "$home_f" "$repo_f"; then
+    if [[ $home_rel == .gitconfig ]]; then
+      log "  $home_rel: differs from repo template (expected: install uses sed for name/email)"
+    else
+      log "  $home_rel: differs from current repo template (merge manually if desired)"
+    fi
+  fi
+done
+
+section "Summary"
+log "  pull:       $old_head -> $new_head"
+log "  updated:    ${updated[*]:-(none)}"
+log "  unchanged:  ${unchanged[*]:-(none)}"
+log "  skipped:    ${skipped[*]:-(none)}"
+log "  forced:     ${forced[*]:-(none)}"
+
+if ((${#skipped[@]})); then
+  exit 2
+fi
