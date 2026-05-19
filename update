@@ -20,7 +20,7 @@ Options:
   -h, --help   Show this help
 
 Safe files (synced when in sync, or with --override):
-  .zshrc_common, .vimrc, .gitignore, .zshrc_local (from OS template)
+  .zshrc_common, .vimrc, .gitignore, and .zshrc_local when ${OS}.zshrc_local exists
 
 Report only (never auto-copied; shows upstream template diff after pull):
   .zshrc, .gitconfig
@@ -54,8 +54,14 @@ esac
 os_local_src="${os}.zshrc_local"
 
 # home_relpath -> repo_relpath (under BOOTSTRAP_ROOT)
-declare -a SYNC_HOME=(.zshrc_common .vimrc .gitignore .zshrc_local)
-declare -a SYNC_REPO=(.zshrc_common .vimrc .gitignore "$os_local_src")
+# Same files install.sh copies on all platforms; .zshrc_local only when a template exists
+# (install.sh: Darwin.zshrc_local, CYGWIN.zshrc_local — no Linux/FreeBSD template yet).
+declare -a SYNC_HOME=(.zshrc_common .vimrc .gitignore)
+declare -a SYNC_REPO=(.zshrc_common .vimrc .gitignore)
+if [[ -f $BOOTSTRAP_ROOT/$os_local_src ]]; then
+  SYNC_HOME+=(.zshrc_local)
+  SYNC_REPO+=("$os_local_src")
+fi
 
 declare -a REPORT_HOME=(.zshrc .gitconfig)
 declare -a REPORT_REPO=(.zshrc .gitconfig)
@@ -81,11 +87,6 @@ git_pull() {
 
 if [[ ! -d $BOOTSTRAP_ROOT/.git ]]; then
   echo "Not a git checkout: $BOOTSTRAP_ROOT" >&2
-  exit 1
-fi
-
-if [[ ! -f $BOOTSTRAP_ROOT/$os_local_src ]]; then
-  echo "Missing OS template: $BOOTSTRAP_ROOT/$os_local_src" >&2
   exit 1
 fi
 
