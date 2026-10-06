@@ -23,7 +23,8 @@ Safe files (synced when in sync, or with --override):
   .zshrc_common, .vimrc, .gitignore, and .zshrc_local when ${OS}.zshrc_local exists
 
 Report only (never auto-copied; shows upstream template diff after pull):
-  .zshrc, .gitconfig
+  .zshrc       repo template must be the head of ~/.zshrc; lines below are ignored
+  .gitconfig   name, email, and signingkey are ignored
 
 bin/ lives under ~/.bootstrap and is updated in place by git pull (on PATH).
 EOF
@@ -75,6 +76,30 @@ repo_path() { printf '%s/%s' "$BOOTSTRAP_ROOT" "$1"; }
 files_identical() {
   local a=$1 b=$2
   [[ -f $a && -f $b ]] && cmp -s "$a" "$b"
+}
+
+# install.sh prepends the repo .zshrc. Tool installers append below that.
+zshrc_head_matches() {
+  local home_f=$1 repo_f=$2 n
+  [[ -f $home_f && -f $repo_f ]] || return 1
+  n=$(wc -c < "$repo_f" | tr -d '[:space:]')
+  [[ -n $n && $n -gt 0 ]] || return 1
+  cmp -s "$repo_f" <(head -c "$n" "$home_f")
+}
+
+# install.sh fills [user] name, email, and signingkey from the machine.
+gitconfig_body() {
+  awk '
+    /^\[/ { in_user = ($0 ~ /^\[user\][[:space:]]*$/) }
+    in_user && $0 ~ /^[[:space:]]*(name|email|signingkey)[[:space:]]*=/ { next }
+    { print }
+  ' "$1"
+}
+
+gitconfig_equivalent() {
+  local home_f=$1 repo_f=$2
+  [[ -f $home_f && -f $repo_f ]] || return 1
+  cmp -s <(gitconfig_body "$home_f") <(gitconfig_body "$repo_f")
 }
 
 git_pull() {
@@ -201,12 +226,23 @@ for i in "${!REPORT_HOME[@]}"; do
     log "  $home_rel: no upstream template changes"
   fi
 
-  if [[ -f $home_f && -f $repo_f ]] && ! files_identical "$home_f" "$repo_f"; then
-    if [[ $home_rel == .gitconfig ]]; then
-      log "  $home_rel: differs from repo template (expected: install uses sed for name/email)"
-    else
-      log "  $home_rel: differs from current repo template (merge manually if desired)"
-    fi
+  if [[ -f $home_f && -f $repo_f ]]; then
+    case $home_rel in
+      .zshrc)
+        if zshrc_head_matches "$home_f" "$repo_f"; then
+          log "  $home_rel: head matches repo template"
+        else
+          log "  $home_rel: head differs from repo template (merge manually if desired)"
+        fi
+        ;;
+      .gitconfig)
+        if gitconfig_equivalent "$home_f" "$repo_f"; then
+          log "  $home_rel: matches repo template aside from name, email, and signingkey"
+        else
+          log "  $home_rel: differs from repo template beyond name, email, and signingkey"
+        fi
+        ;;
+    esac
   fi
 done
 
