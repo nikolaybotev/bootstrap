@@ -1,31 +1,13 @@
-# ==========================================
-# 1. PRIMARY SYSTEM LAYER & CORE UTILITIES
-# ==========================================
+# Local Tools (mise, uv, unsloth, cursor-agent etc)
 export PATH="$HOME/.local/bin:$PATH"
 
-# Dual-Architecture Homebrew Selection
-[ -x "$HOME/homebrew/bin/brew" ] && eval $($HOME/homebrew/bin/brew shellenv)
-[ -x "/opt/homebrew/bin/brew" ] && eval $(/opt/homebrew/bin/brew shellenv)
-export HOMEBREW_NO_ENV_HINTS=1
+# Homebrew - https://brew.sh
+if [ -x /opt/homebrew/bin/brew ]; then
+  eval "$(/opt/homebrew/bin/brew shellenv)"
+  export HOMEBREW_NO_ENV_HINTS=1
+fi
 
-# ==========================================
-# 2. APPLICATION & SYSTEM PLATFORM PATHS
-# ==========================================
-# Docker Desktop (user install)
-[ -d $HOME/.docker/bin ] && export PATH="$PATH:$HOME/.docker/bin"
-
-# Sudoless Ruby Gems (CocoaPods)
-[ -d "$HOME/.gem" ] && {
-  export GEM_HOME=$HOME/.gem
-  export PATH=$GEM_HOME/bin:$PATH
-}
-
-# Android SDK Toolchain Config
-export ANDROID_HOME=~/Library/Android/sdk
-export ANDROID_VERSION=35.0.0
-export PATH=$PATH:$ANDROID_HOME/tools:$ANDROID_HOME/tools/bin:$ANDROID_HOME/platform-tools:$ANDROID_HOME/build-tools/$ANDROID_VERSION
-
-# ==========================================
-# 3. THE RUNTIME ENGINE (Always Last)
-# ==========================================
-eval "$(mise activate zsh)"
+# Mise - https://mise.en.dev
+if [ "$(type -w mise 2>/dev/null)" = "mise: command" ]; then
+  eval "$(mise activate zsh)"
+fi

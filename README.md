@@ -13,3 +13,5 @@ After installation, run:
 ```
 ~/.bootstrap/update
 ```
+
+Maintainer notes are in [CONTRIBUTING.md](CONTRIBUTING.md).

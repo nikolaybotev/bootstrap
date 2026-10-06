@@ -11,4 +11,4 @@ if [ "$(uname)" != 'Linux' ]; then echo "This script only runs on Linux."; exit 
 [ -f /usr/bin/apt-get ] && sudo apt-get update && sudo apt-get install -y zsh gnupg passwd
 [ -f /sbin/apk ] && [ "$(whoami)" = "root" ] && apk add --no-cache sudo
 [ -f /sbin/apk ] && sudo apk add --no-cache zsh gnupg shadow
-sudo chsh -s /bin/zsh "${USER:-$(whoami)}"
+sudo chsh -s /bin/zsh "$(id -un)"
