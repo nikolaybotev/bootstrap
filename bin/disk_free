@@ -1,0 +1,62 @@
+#!/bin/bash
+# Volume space as Finder reports it: available (free plus purgeable), free,
+# purgeable and total, in decimal GB. macOS only.
+set -euo pipefail
+
+if [ "$(uname)" != Darwin ]; then
+  echo "disk_free: macOS only" >&2
+  exit 1
+fi
+
+usage() {
+  echo "Usage: disk_free [--json | --raw] [path]"
+  echo "  default  available 248.33 GB, free 200.28 GB, purgeable 48.05 GB, total 494.38 GB"
+  echo "  --json   {\"path\":\"/\",\"available\":...,\"free\":...,\"purgeable\":...,\"total\":...} in bytes"
+  echo "  --raw    available free purgeable total, in bytes, space-separated"
+}
+
+format=human
+path=/
+while [ $# -gt 0 ]; do
+  case $1 in
+    --json) format=json ;;
+    --raw) format=raw ;;
+    -h|--help) usage; exit 0 ;;
+    -*) usage >&2; exit 2 ;;
+    *) path=$1 ;;
+  esac
+  shift
+done
+
+if [ ! -e "$path" ]; then
+  echo "disk_free: no such file or directory: $path" >&2
+  exit 1
+fi
+
+osascript -l JavaScript - "$format" "$path" <<'EOF'
+ObjC.import("Foundation");
+function run(argv) {
+  var format = argv[0], path = argv[1];
+  var r = $.NSURL.fileURLWithPath(path).resourceValuesForKeysError([
+    "NSURLVolumeAvailableCapacityForImportantUsageKey",
+    "NSURLVolumeAvailableCapacityKey",
+    "NSURLVolumeTotalCapacityKey"
+  ], null);
+  function get(key) {
+    var v = ObjC.unwrap(r.objectForKey(key));
+    if (typeof v !== "number") throw new Error("disk_free: " + key + " unavailable for " + path);
+    return v;
+  }
+  var available = get("NSURLVolumeAvailableCapacityForImportantUsageKey");
+  var free = get("NSURLVolumeAvailableCapacityKey");
+  var total = get("NSURLVolumeTotalCapacityKey");
+  var purgeable = Math.max(0, available - free);
+  if (format === "json")
+    return JSON.stringify({path: path, available: available, free: free, purgeable: purgeable, total: total});
+  if (format === "raw")
+    return [available, free, purgeable, total].join(" ");
+  function gb(n) { return (n / 1e9).toFixed(2) + " GB"; }
+  return "available " + gb(available) + ", free " + gb(free) +
+    ", purgeable " + gb(purgeable) + ", total " + gb(total);
+}
+EOF

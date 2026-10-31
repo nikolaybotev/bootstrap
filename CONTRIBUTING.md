@@ -24,6 +24,6 @@ Cases:
 - existing `~/.zshrc`: prepend the template, keep the old lines, write `~/.zshrc.backup`, then load the file in `zsh` and confirm an alias from the old file is still there
 - running the prepend case again: exit because `~/.bootstrap` now exists, and leave `~/.zshrc` as it was
 
-GitHub Actions runs `sh test/run.sh` on every push and pull request (`.github/workflows/test.yml`).
+GitHub Actions runs `sh test/run.sh` on every push and pull request (`.github/workflows/test.yml`). CI also runs `sh test/disk_free.sh` on macOS.
 
 macOS, FreeBSD, and Cygwin install steps are not part of this run.

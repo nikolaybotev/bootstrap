@@ -9,5 +9,14 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+      - name: disk_free refuses non-macOS
+        run: out=$(bin/disk_free 2>&1) && exit 1; echo "$out" | grep -q "macOS only"
       - name: Run install tests
         run: sh test/run.sh
+  disk-free-macos:
+    runs-on: macos-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - name: disk_free sanity check
+        run: sh test/disk_free.sh
